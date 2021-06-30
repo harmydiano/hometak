@@ -1,0 +1,66 @@
+<html>
+<head></head>
+
+<body>
+  <div id="message"></div>
+
+  <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+  <script>
+    var connectionOptions = {transports: ['websocket'], upgrade:false};
+    var socket = io('http://localhost:4000', connectionOptions);
+    passenger = '605276247194d7f3bbe7529c';
+    let tripData = {
+      passenger: '605276247194d7f3bbe7529c',
+      severityLevel: 8,
+      pickupLocation: 'TX',
+      dropOffLocation: 'nEW yORK',
+      estimatedFee: 20000,
+      orderFor: 'SELF',
+      symptoms: ['Headache', 'Cough', 'Chest pain', 'Fever'],
+      // tripStatus: 'PENDING',
+     // passengerId : 1233,
+      driver: '6052910fd529626668c1aeeb',
+     //tripType: 'INSTANT',
+      tripType: 'SCHEDULE',
+      ambulanceType: '605c3af78ed9363e3c4ed5fa',
+      noOfAmbulance:1,
+      noOfHours:2,
+      pickupDate: '2021-04-27T20:59:26.967+00:00',
+      //pickupTime: '11:33:01'
+     // passengerLong: 3.1234,
+     // passengerLatt: 4.3524
+    }
+    socket.on("connect", () => {
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+      socket.emit('socket_user_connect', {
+        connectedId: passenger,
+        connected: true,
+        socketId: socket.id
+    });
+      socket.emit("passenger_send_request", tripData)
+    });
+    socket.on('driver_accepted_request', function(msg) {
+      console.log(msg);
+      // if (passengerId == driver) console.log(msg);
+      // socket.emit('driver_accept_request', msg.data);
+    })
+
+    socket.on('driver_recieve_request', function(msg) {
+      console.log(msg);
+      document.getElementById("message").innerHTML = msg;
+      // if (passengerId == driver) console.log(msg);
+      // socket.emit('driver_accept_request', msg.data);
+    })
+   
+    socket.on('message', function(msg){
+      console.log(msg);
+      document.getElementById("message").innerHTML = msg;
+    });
+
+   /* socket.on('disconnect', function() {
+      socket.socket.reconnect();
+    });*/
+    
+  </script>
+</body>
+</html>

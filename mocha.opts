@@ -1,0 +1,6 @@
+--exit
+--require @babel/register
+--require @babel/polyfill
+--require env-test
+--timeout 50000
+--bail

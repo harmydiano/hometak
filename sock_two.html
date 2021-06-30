@@ -1,0 +1,41 @@
+<html>
+<head></head>
+
+<body>
+  <div id="message"></div>
+
+  <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+  <script>
+    var connectionOptions = {transports: ['websocket'], upgrade:false};
+    var socket = io('http://localhost:4000', connectionOptions);
+    let driver = '6052910fd529626668c1aeeb'
+
+    socket.on("connect", () => {
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+      socket.emit('socket_user_connect', {
+        connectedId: driver,
+        connected: true,
+        socketId: socket.id
+      });
+    });
+    socket.on('driver_recieve_request', function(msg) {
+      console.log(msg);
+      const passengerId = msg.driver;
+      // if (passengerId == driver) console.log(msg);
+      socket.emit('driver_accept_request', msg.data);
+    })
+
+    socket.on('message', function(msg){
+      console.log(msg);
+      document.getElementById("message").innerHTML = msg;
+    });
+
+    socket.on('error', function (err) {
+      console.log(err);
+    });
+    /* socket.on('disconnect', function() {
+      socket.socket.reconnect();
+    });*/
+  </script>
+</body>
+</html>
