@@ -52,7 +52,7 @@ const AuthController = {
                 code: OK,
                 value: _.pick(auth, ['_id', 'email', 'active', 'accountVerified']),
             });
-            let message = lang.get('email').welcome;
+            /*let message = lang.get('email').welcome;
             // send welcome email
             let emailError = await sendMail({
                 user: 'user',
@@ -63,7 +63,7 @@ const AuthController = {
             });
             if (emailError && typeof emailError === 'object') {
             	return next(emailError);
-            }
+            }*/
             await session.commitTransaction();
             return res.status(OK).json(response);
         } catch (e) {
