@@ -56,7 +56,7 @@ const AuthController = {
             // send welcome email
             let emailError = await sendMail({
                 user: 'user',
-                mesage,
+                message,
                 email: obj.email,
                 subject: lang.get('email').welcome_subject,
                 filename: 'customer-welcome',
