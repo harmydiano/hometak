@@ -66,8 +66,11 @@ class MerchantProcessor extends AppProcessor {
      * @return {Object}
      */
 	async postUpdateResponse(obj, response) {
-        if (!_.isEmpty(obj.account) && _.isEmpty(response.value.flutterId)){
+        console.log(obj.account)
+       console.log(_.isEmpty(response.value.flutterId))
+        if (!_.isEmpty(obj.account.name) && _.isEmpty(response.value.flutterId)){
             const savedSubAccount = await TransactionProcessor.flutterAddSubAccount(obj, response);
+           // consle.log('subaccoun', savedSubAccount)
             if (!_.isEmpty(savedSubAccount)){
                 const updated = await Merchant.findOneAndUpdate({ _id: response._id }, { $set: {flutterId: savedSubAccount.data.subaccount_id} }, {
                     upsert: true,
