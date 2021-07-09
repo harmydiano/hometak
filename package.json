@@ -59,6 +59,7 @@
         "express-http-proxy": "^1.6.0",
         "express-session": "^1.17.1",
         "flutterwave-node": "^1.2.2",
+        "flutterwave-node-v3": "^1.0.6",
         "fpl-api": "^2.2.1",
         "googleapis": "^73.0.0",
         "graphql": "^14.6.0",

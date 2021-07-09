@@ -12,6 +12,7 @@ import resources from './rest/resource/resource.route';
 import media from './rest/media/media.route';
 import wallet from './rest/wallet/wallet.route';
 import transaction from './rest/transaction/transaction.route';
+import bank from './rest/bank/bank.route';
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use(wallet);
 router.use(resources);
 router.use(media);
 router.use(transaction);
+router.use(bank);
 
 export default router;

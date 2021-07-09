@@ -1,12 +1,17 @@
 const Ravepay = require('flutterwave-node');
+const Flutterwave = require('flutterwave-node-v3');
+
 
 class Flutter{
 
     constructor(pub, secret, production=false){
         this.pub = pub;
         this.rave = new Ravepay(pub, secret,  production);
+        this.fw = new Flutterwave(pub, secret);
         this.charge = this.charge.bind(this)
         this.addAccount = this.addAccount.bind(this)
+        this.fetchBanks = this.fetchBanks.bind(this)
+        this.resolveAccount = this.resolveAccount.bind(this)
     }
 
     async charge(obj){
@@ -67,6 +72,30 @@ class Flutter{
         }
         catch(err){
 
+        }
+    }
+
+    async resolveAccount(payload){
+        try{
+            console.log('payload', payload);
+            const response = await this.fw.Misc.verify_Account(payload)
+            console.log('response', response);
+            return response;
+        }
+        catch(err){
+
+        }
+    }
+
+    async fetchBanks(payload){
+        try{
+            console.log('payload', payload);
+            const response = await this.fw.Bank.country(payload)
+            console.log('response', response);
+            return response;
+        }
+        catch(err){
+            console.log(err)
         }
     }
 }

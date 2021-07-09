@@ -215,7 +215,7 @@ class AppController {
             if (!_.isEmpty(canUpdateError)) {
                 return next(canUpdateError);
             }
-            console.log(object, obj);
+           // console.log(object, obj);
             object = await processor.updateObject(object, obj);
             req.response = {
                 model: this.model,
@@ -232,7 +232,6 @@ class AppController {
             return next(err);
         }
     }
-
 
     /**
      * @param {Object} req The request object
