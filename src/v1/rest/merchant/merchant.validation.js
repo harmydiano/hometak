@@ -22,6 +22,8 @@ class MerchantValidation {
 				.optional(),
 			address: Joi.string()
 				.optional(),
+			bookingLimit: Joi.string()
+				.optional(),
 			profilePic: Joi.string()
 				.optional(),
 			brandColor: Joi.string()
