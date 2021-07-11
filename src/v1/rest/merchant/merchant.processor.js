@@ -71,12 +71,12 @@ class MerchantProcessor extends AppProcessor {
         if (!_.isEmpty(obj.account.name) && _.isEmpty(response.value.flutterId)){
             const savedSubAccount = await TransactionProcessor.flutterAddSubAccount(obj, response);
            // consle.log('subaccoun', savedSubAccount)
-            if (!_.isEmpty(savedSubAccount)){
+            if (!_.isEmpty(savedSubAccount.data)){
                 const updated = await Merchant.findOneAndUpdate({ _id: response._id }, { $set: {flutterId: savedSubAccount.data.subaccount_id} }, {
                     upsert: true,
                     new: true,
                     setDefaultsOnInsert: true,
-                    session
+                    //session
                 });
                 console.log(updated)
             }
