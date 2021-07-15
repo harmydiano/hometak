@@ -24,6 +24,7 @@ class TransactionController extends AppController {
         this.charge = this.charge.bind(this);
         this.transfer = this.transfer.bind(this)
         this.refund = this.refund.bind(this);
+        this.merchant = this.merchant.bind(this);
     }
 
     /**

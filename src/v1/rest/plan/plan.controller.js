@@ -27,7 +27,7 @@ class PlanController extends AppController {
      * @return {void}
      */
     async currentUserPlan(req, res, next) {
-       req.query = {user: auth.id}
+       req.query = _.extend(req.query, {user: req.authId})
        super.find(req, res, next)
     }
 
