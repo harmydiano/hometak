@@ -10,6 +10,8 @@ const bookingCtrl = new BookingController(Booking);
 
 router.route('/bookings/me')
     .get(auth, bookingCtrl.currentUserBooking, response)
+router.route('/bookings/me/filter')
+    .get(auth, bookingCtrl.filterCurrentUserBooking, response)
 router.route('/bookings')
     .post(auth, bookingCtrl.create, response)
     .get(auth, bookingCtrl.find, response);

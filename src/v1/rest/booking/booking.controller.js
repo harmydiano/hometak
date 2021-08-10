@@ -26,6 +26,7 @@ class BookingController extends AppController {
         this.model = model;
         this.create = this.create.bind(this);
         this.currentUserBooking = this.currentUserBooking.bind(this);
+        this.filterCurrentUserBooking = this.filterCurrentUserBooking.bind(this);
     }
 
     /**
@@ -59,6 +60,7 @@ class BookingController extends AppController {
             const bookingObject = await BookingProcessor.processNewObject(_.omit(obj, ['session']));
             let booking = new this.model(bookingObject);
             await booking.save();
+            
             const response = await BookingProcessor.getResponse({
                 model: this.model,
                 code: OK,
@@ -94,6 +96,18 @@ class BookingController extends AppController {
        req.query = {merchant: req.authId}
        super.find(req, res, next)
     }
+
+    /**
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     * @param {Function} next The callback to the next program handler
+     * @return {void}
+     */
+    async filterCurrentUserBooking(req, res, next) {
+        console.log('request', req.body)
+        _.extend(req.query, {merchant: req.authId, createdAt : {$gte : new Date(req.body.startDate), $lt:new Date(req.body.endDate)}})
+        super.find(req, res, next)
+     }
 
 }
 

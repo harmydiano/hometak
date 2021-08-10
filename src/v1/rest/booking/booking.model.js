@@ -15,6 +15,10 @@ const BookingModel = new AppSchema({
         type: Schema.Types.ObjectId,
         ref: 'Merchant'
     },
+    bookingAssingnedTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cleaners'
+    },
     bookingId: {
         type: String
     },
