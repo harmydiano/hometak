@@ -57,6 +57,36 @@ class CleanersProcessor extends AppProcessor {
     }
 
     /**
+     * @param {Object} object The object properties
+     * @return {Object} returns the location query
+     */
+    static processLocationObj(long, latt) {
+        return {
+          location: {
+            type: "Point",
+            coordinates: [long, latt],
+          },
+        };
+    }
+
+     /**
+     * @param {Object} object The object properties
+     * @return {Object} returns the location query
+     */
+    static locationQuery(obj) {
+        return {
+          $near: {
+            $minDistance: MIN_DISTANCE,
+            $maxDistance: MAX_DISTANCE,
+            $geometry: {
+              type: "Point",
+              coordinates: [obj.long, obj.latt],
+            },
+          },
+        };
+    }
+
+    /**
      * @param {Object} obj The payload object
      * @param {Object} session The payload object
      * @return {Object}
@@ -65,6 +95,9 @@ class CleanersProcessor extends AppProcessor {
         const { user, session } = obj;
         const objectToUpdate = _.omit(obj, ['session', 'email', 'password', 'verifyCodeExpiration', 'verificationCode', 'role']);
         console.log(objectToUpdate);
+        const {lat, lng} = await fetchCoordsfromAddress(obj.address);
+        const locationCordinates = this.processLocationObj(lng, lat)
+        _.extend(location, locationCordinates)
         let found = await Cleaners.findOne({ _id: user }).session(session);
         if (!found) {
             found = await Cleaners.findOneAndUpdate({ _id: user }, { $set: objectToUpdate }, {
@@ -83,6 +116,15 @@ class CleanersProcessor extends AppProcessor {
 	 */
 	static async userExist(id) {
 		return await Merchant.findOne({ _id: id });
+    }
+    
+    /**
+	 * @param {Object} id The object properties
+	 * @return {Promise<Object>}
+	 */
+	static async findCleanersByLocation(obj) {
+        const locationQuery = this.locationQuery(obj)
+		return await Cleaners.findOne({ merchant, location: locationQuery});
 	}
 }
 

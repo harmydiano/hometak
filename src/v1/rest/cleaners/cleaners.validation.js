@@ -20,6 +20,7 @@ class CleanersValidation {
             lastName: Joi.string().required(),
             gender: Joi.string().required(),
             state: Joi.string().required(),
+            address: Joi.string().required(),
             lga: Joi.string().required(),
             dateOfBirth: Joi.date().required()
         }).options({ abortEarly: false });

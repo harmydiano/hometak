@@ -13,7 +13,7 @@ const CleanersModel = new AppSchema({
     },
     merchant: {
         type: Schema.Types.ObjectId,
-        ref: 'Auth'
+        ref: 'Merchant'
     },
     firstName: {
         type: String,
