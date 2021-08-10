@@ -100,6 +100,7 @@ export default {
         payment_required: 'Payment must be made',
         duplicate: 'Duplicate transaction reference',
         transaction_does_not_exist: 'Transaction reference does not exist',
+        cannot_confirm: 'Cannot confirm user payment record'
     },
     file: {
         uploaded: 'File successfully uploaded',
