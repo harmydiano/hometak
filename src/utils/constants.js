@@ -44,6 +44,11 @@ export const LEFT_STATE = 'left';
 export const REMOVE_STATE = 'removed';
 export const NORMAL_STATE = 'normal';
 
+export const CREDIT = 'credit';
+export const DEBIT = 'debit';
+export const WITHDRAW = 'withdraw';
+
+
 export const IS_WAITING = 0;
 export const IS_SENT = 1;
 export const IS_DELIVERED = 2;
