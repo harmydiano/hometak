@@ -9,6 +9,7 @@ import htmlToText from 'html-to-text'
 import pug from 'pug';
 import config from 'config';
 import mongoose from 'mongoose';
+import fetch from 'node-fetch';
 
 /**
  * @param {Number} size Hour count
@@ -153,3 +154,23 @@ export const sendEmail = (options) => {
 export const IsObjectId = (value) => {
 	return value && value.length > 12 && String(mongoose.Types.ObjectId(value)) === String(value) && mongoose.Types.ObjectId.isValid(value);
 };
+
+
+/**
+ * Fetch cordinates from address
+ * @param {String} address
+ * @return {Object} The cordinates
+ */
+export const fetchCoordsfromAddress = async (address) => {
+    try {
+        const response = await fetch(config.get('geocodeURL') + address + '&key=' + config.get('google.api'))
+        const json = await response.json();
+        if (json.results && json.results.length > 0 && json.results[0].formatted_address) {
+            return json.results[0].geometry.location;
+        }
+        return null;
+    }
+    catch(err){
+       // console.log(err)
+    }
+}
