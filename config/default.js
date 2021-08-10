@@ -92,6 +92,8 @@ module.exports = {
         playground: process.env.GOOGLE_PLAYGROUND,
         redirect_uris: process.env.GOOGLE_REDIRECT_URI,
         refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+        api: process.env.GOOGLE_MAP_KEY,
+        geocodeURL: 'https://maps.googleapis.com/maps/api/geocode/json?address='
     },
     emailAlerts: {
         templateIds: {
