@@ -217,15 +217,69 @@ class TransactionProcessor extends AppProcessor {
     }
 
     /**
+     * @param {Object} query The main property
+     * @param {Object} options The object properties
+     * @return {Object} returns the api error if main cannot be verified
+     */
+    static dateQueryBuild(query, options){
+        let filter = {[`$${options}`]: "$createdAt"};
+        if (options == 'day'){
+          filter = {$dayOfWeek: "$createdAt"}
+        }
+        return [
+          {
+            $match: query
+          },
+          {
+            $project : { 
+              [options] : filter,
+              amount : 1
+            }
+          },
+          {
+            $group :{
+              _id :
+              {
+                [options] : `$${options}`,
+              }, 
+              total : {
+                $sum: "$amount"
+              }
+            }
+        }
+    
+        ]
+      }
+
+    /**
+     * @param {Object} obj The main property
+     * @return {Object} returns the api error if main cannot be verified
+     */
+    static async filterTransaction(id, options, transType){
+        const user = mongoose.Types.ObjectId(id);
+        let query = {user, transType}
+        let resultQuerythis;
+        if (options == 'daily'){
+            resultQuerythis = this.dateQueryBuild(query, 'day')
+        }
+        if (options == 'monthly') {
+            resultQuerythis = this.dateQueryBuild(query, 'month')
+        }
+        if (options == 'yearly') {
+            resultQuerythis = this.dateQueryBuild(query, 'year')
+        }
+        return await this.model.aggregate(resultQuerythis);
+    }
+
+    /**
      * @param {Object} obj The main property
      * @return {Object} returns the api error if main cannot be verified
      */
     static async paymentByUser(obj) {
-        const { user, league, transId } = obj;
+        const { email, transId } = obj;
         let status = false;
         const query = await Transaction.findOne({
-            user,
-            league,
+            email,
             transId
         });
         if (!_.isEmpty(query)) {
@@ -249,6 +303,27 @@ class TransactionProcessor extends AppProcessor {
             return new AppError(lang.get('transactions').payment_required, BAD_REQUEST);
         }
         return true;
+    }
+
+    /**
+     * @param {Object} obj The payload object
+     * @param {Object} session The payload object
+     * @return {Object}
+     */
+    static async updateTransaction(obj) {
+        const { transId, session } = obj;
+        const objectToUpdate = _.omit(obj, ['session']);
+        console.log(objectToUpdate);
+        let found = await Transaction.findOne({ transId: transId }).session(session);
+        if (!found) {
+            found = await Transaction.findOneAndUpdate({ transId: transId }, { $set: objectToUpdate }, {
+                upsert: true,
+                new: true,
+                setDefaultsOnInsert: true,
+                session
+            });
+        }
+        return found;
     }
 
     /**

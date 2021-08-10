@@ -25,6 +25,7 @@ class TransactionController extends AppController {
         this.transfer = this.transfer.bind(this)
         this.refund = this.refund.bind(this);
         this.merchant = this.merchant.bind(this);
+        this.filterCurrentUserTransaction = this.filterCurrentUserTransaction.bind(this);
     }
 
     /**
@@ -43,16 +44,16 @@ class TransactionController extends AppController {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
-            const transQuery = await this.model.findOne({
-                user: req.authId,
-                leagueId: obj.bookingId,
-                status: PENDING
-            });
-            const paymentRefError = await TransactionProcessor.canInitiatePayment(transQuery, obj.leagueId);
-            console.log(paymentRefError);
-            if (paymentRefError instanceof AppError) {
-                return next(paymentRefError);
-            }
+            // const transQuery = await this.model.findOne({
+            //     user: req.authId,
+            //     bookingId: obj.bookingId,
+            //     status: PENDING
+            // });
+            // const paymentRefError = await TransactionProcessor.canInitiatePayment(transQuery, obj.bookingId);
+            // console.log(paymentRefError);
+            // if (paymentRefError instanceof AppError) {
+            //     return next(paymentRefError);
+            // }
             obj = await TransactionProcessor.processNewObject(req, obj, PENDING);
 
             const savedTrans = await this.model.findOneAndUpdate({ transId: obj.transId }, { $set: obj }, {
@@ -264,6 +265,39 @@ class TransactionController extends AppController {
         req.query = _.extend(req.query, { user: req.authId });
         super.find(req, res, next);
     }
+
+    /**
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     * @param {Function} next The callback to the next program handler
+     * @return {void}
+     */
+    async filterCurrentUserTransaction(req, res, next) {
+        console.log('request', req.body)
+        _.extend(req.query, {merchant: req.authId, createdAt : {$gte : new Date(req.body.startDate), $lt:new Date(req.body.endDate)}})
+        super.find(req, res, next)
+     }
+
+     /**
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     * @param {Function} next The callback to the next program handler
+     * @return {void}
+     */
+    async extraFilterCurrentUserTransaction(req, res, next) {
+        const id = req.authId
+        const {options} = req.body
+        const amountRecived = await TransactionProcessor.filterTransaction(id, options, 'credit')
+        const amountSent = await TransactionProcessor.filterTransaction(id, options, 'debit')
+        const result = {amountRecived, amountSent}
+        const response = await TransactionProcessor.getResponse({
+            model: this.model,
+            code: OK,
+            value: result,
+        });
+        await session.commitTransaction();
+        return res.status(OK).json(response);
+     }
 }
 
 export default TransactionController;

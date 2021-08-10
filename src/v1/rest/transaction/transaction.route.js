@@ -20,5 +20,7 @@ router.route('/transactions')
 	.get(auth, transactionCtrl.find, response);
 router.route('/user/transactions')
 	.get(auth, transactionCtrl.merchant, response);
+router.route('/user/transactions/filter')
+	.get(auth, transactionCtrl.filterCurrentUserTransaction, response);
 
 export default router;
