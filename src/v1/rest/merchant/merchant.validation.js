@@ -22,7 +22,7 @@ class MerchantValidation {
 				.optional(),
 			address: Joi.string()
 				.optional(),
-			bookingLimit: Joi.string()
+			bookingLimit: Joi.number()
 				.optional(),
 			profilePic: Joi.string()
 				.optional(),
