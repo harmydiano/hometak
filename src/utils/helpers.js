@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import sgMail from '@sendgrid/mail/index';
 import createRequest from '../lib/request';
 import ApiService from '../lib/app-request';
-import Mailer from '../lib/api/mailer'
+import {Mailer} from '../lib/api/mailer'
 import axios from 'axios';
 import juice from 'juice';
 import htmlToText from 'html-to-text'
