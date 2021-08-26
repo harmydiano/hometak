@@ -52,18 +52,19 @@ const AuthController = {
                 code: OK,
                 value: _.pick(auth, ['_id', 'email', 'active', 'accountVerified']),
             });
-            /*let message = lang.get('email').welcome;
+            //let message = lang.get('email').welcome;
             // send welcome email
+            let message = `Your Verification Code is: ${auth.verificationCode}`;
             let emailError = await sendMail({
                 user: 'user',
-                message,
                 email: obj.email,
+                message,
                 subject: lang.get('email').welcome_subject,
-                filename: 'customer-welcome',
+                filename: 'customer-resend-mail',
             });
-            if (emailError && typeof emailError === 'object') {
-            	return next(emailError);
-            }*/
+            // if (emailError && typeof emailError === 'object') {
+            // 	return next(emailError);
+            // }
             await session.commitTransaction();
             return res.status(OK).json(response);
         } catch (e) {
@@ -204,9 +205,9 @@ const AuthController = {
                 subject: lang.get('email').password_reset,
                 filename: 'customer-password-reset',
             });
-            if (emailError && typeof emailError === 'object') {
-            	return next(emailError);
-            }
+            // if (emailError && typeof emailError === 'object') {
+            // 	return next(emailError);
+            // }
             const response = await AuthProcessor.getResponse({
                 model: Auth,
                 code: OK,
