@@ -1,0 +1,9 @@
+extends email-layout
+
+block content
+  //- h2 Email Verification
+  h2 Hello #{user},
+  p Your booking has been successfully created with booking ID #{bookingId}, please use the link below to cancel your booking request.
+  +button(URL, 'Cancel Booking →')
+  p If you can't click the above button please visit #{URL}
+  br
