@@ -10,6 +10,7 @@ import UserProcessor from '../user/user.processor';
 import { _extend } from 'util';
 import lang from '../../lang';
 import AppError from '../../../lib/api/app-error';
+import {sendMail} from '../../../utils/helpers';
 console.log(Merchant)
 
 /**
@@ -66,15 +67,18 @@ class BookingController extends AppController {
                 code: OK,
                 value: booking,
             });
-            // let message = lang.get('email').welcome;
-            // // send welcome email
-            // let emailError = await sendMail({
-            //     user: 'user',
-            //     mesage,
-            //     email: obj.email,
-            //     subject: lang.get('email').welcome_subject,
-            //     filename: 'customer-welcome',
-            // });
+            let message = lang.get('email').welcome;
+            const URL = `req.headers['site-url']/${bookig._id}`;
+            // send welcome email
+            let emailError = await sendMail({
+                user: obj.name,
+                URL,
+                bookingId: booking.bookingId,
+                mesage,
+                email: obj.email,
+                subject: lang.get('email').welcome_subject,
+                filename: 'customer-welcome',
+            });
             // if (emailError && typeof emailError === 'object') {
             // 	return next(emailError);
             // }
