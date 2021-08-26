@@ -21,6 +21,7 @@ class UserController extends AppController {
         this.model = model;
         this.updateMe = this.updateMe.bind(this);
         this.currentUser = this.currentUser.bind(this);
+        this.findMerchant = this.findMerchant.bind(this);
     }
 
     /**
@@ -41,6 +42,22 @@ class UserController extends AppController {
      */
     async currentUser(req, res, next) {
         const user = await this.model.findById(req.authId);
+        req.response = {
+            model: this.model,
+            code: OK,
+            value: user,
+        };
+        return next();
+    }
+
+     /**
+     * @param {Object} req The request object
+     * @param {Object} res The response object
+     * @param {Function} next The callback to the next program handler
+     * @return {void}
+     */
+    async findMerchant(req, res, next) {
+        const user = await this.model.findOne({slug: req.params.slug});
         req.response = {
             model: this.model,
             code: OK,

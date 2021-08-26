@@ -13,6 +13,8 @@ router.route('/merchants/me')
     .get(auth, merchantCtrl.currentUser, response)
     .put(auth, merchantCtrl.updateMe, response);
 
+router.route('/merchants/single/info')
+    .get(merchantCtrl.findMerchant, response)
 router.route('/merchants')
     .get(auth, merchantCtrl.find, response);
 router.param('id', merchantCtrl.id, response);
