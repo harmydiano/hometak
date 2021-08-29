@@ -76,9 +76,7 @@ module.exports = {
             contactFormRecipient: process.env.CONTACT_FORM_EMAIL_RECIPIENT,
         },
         nodemailer: {
-            from: 'harmylarry20',
-            service: "gmail",
-            authType: "OAuth2"
+            from: 'noreply@ses.yaply.network'
         }
     },
     google: {
