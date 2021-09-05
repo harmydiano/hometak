@@ -109,9 +109,10 @@ const AuthValidation = {
      * @return {Object} Validator
      */
 	async resetPassword(body = {}) {
+		console.log('body', body)
 		const schema = Joi.object({
 			email: Joi.string()
-				.email(11)
+				.email()
 				.required(),
 			password: Joi.string()
 				.alphanum()
