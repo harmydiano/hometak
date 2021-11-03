@@ -34,7 +34,7 @@ const AuthController = {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
-            let checkEmail = await Auth.findOne({ email: obj.email });
+            let checkEmail = await Auth.findOne({ email: {'$regex': obj.email, '$options':'i'}});
             const verifyError = await AuthProcessor.canVerify(checkEmail, obj);
             if (verifyError instanceof AppError) {
                 return next(verifyError);
@@ -88,7 +88,7 @@ const AuthController = {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
-            const auth = await Auth.findOne({ email: obj.email }).select('+password');
+            const auth = await Auth.findOne({ email: {'$regex': obj.email, '$options':'i'}}).select('+password');
             const canLogin = await AuthProcessor.canLogin(auth, obj);
             if (canLogin instanceof AppError) {
                 return next(canLogin);
@@ -160,7 +160,7 @@ const AuthController = {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
-            let auth = await Auth.findOne({ email: obj.email }).select('+password').exec();
+            let auth = await Auth.findOne({ email: {'$regex': obj.email, '$options':'i'}}).select('+password');
             const verifyError = await AuthProcessor.cannotVerifyEmail(auth, obj);
             if (verifyError instanceof AppError) {
                 return next(verifyError);
@@ -189,7 +189,7 @@ const AuthController = {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
-            let auth = await Auth.findOne({ email: obj.email }).select('+password').exec();
+            let auth = await Auth.findOne({ email: {'$regex': obj.email, '$options':'i'}}).select('+password');
             if (!auth) {
                 return next(new AppError(lang.get('auth').account_does_not_exist, NOT_FOUND));
             }
@@ -232,6 +232,7 @@ const AuthController = {
             if (!validator.passed) {
                 return next(new AppError(lang.get('error').inputs, BAD_REQUEST, validator.errors));
             }
+            console.log("heyyy");
             let auth = await Auth.findOne({ email: obj.email });
             const resetError = await AuthProcessor.cannotResetPassword(auth, obj);
             if (resetError) {
